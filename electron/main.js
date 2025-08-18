@@ -32,6 +32,7 @@ ipcMain.handle("db:get-products", () => db.getProducts());
 ipcMain.handle("db:add-product", (e, product) => db.addProduct(product));
 ipcMain.handle("db:update-product", (e, product) => db.updateProduct(product));
 ipcMain.handle("db:delete-product", (e, id) => db.deleteProduct(id));
+ipcMain.handle("search-products", (event, keyword) => db.searchProducts(keyword));
 
 // Sales
 ipcMain.handle("db:add-sale", (event, sale) => db.addSale(sale));

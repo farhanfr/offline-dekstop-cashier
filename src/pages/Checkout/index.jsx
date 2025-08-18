@@ -3,10 +3,16 @@ import { useEffect, useState } from "react";
 export default function Checkout() {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
+  const [search, setSearch] = useState("");
 
-  // Fetch products from DB
-  const fetchProducts = async () => {
-    const data = await window.api.getProducts();
+  // Fetch products from DB (initial load or when searching)
+  const fetchProducts = async (keyword = "") => {
+    let data;
+    if (keyword.trim()) {
+      data = await window.api.searchProducts(keyword); // call DB search
+    } else {
+      data = await window.api.getProducts(); // load all if no search
+    }
     setProducts(data);
   };
 
@@ -19,11 +25,18 @@ export default function Checkout() {
     const existing = cart.find((c) => c.id === product.id);
     if (existing) {
       setCart(
-        cart.map((c) =>
-          c.id === product.id ? { ...c, qty: c.qty + 1 } : c
-        )
+        cart.map((c) =>{
+          console.log(c)
+          if (c.stock === 0 || c.stock < 0) {
+            return alert("Product out of stock");
+          }
+          return  c.id === product.id ? { ...c, qty: c.qty + 1 } : c
+        })
       );
     } else {
+      if(product.stock === 0 || product.stock < 0) {
+        return alert("Product out of stock");
+      }
       setCart([...cart, { ...product, qty: 1 }]);
     }
   };
@@ -68,6 +81,24 @@ export default function Checkout() {
       {/* Products List */}
       <div>
         <h1 className="text-2xl font-bold mb-4">Products</h1>
+
+        {/* Search Box */}
+        <div className="mb-4 flex gap-2">
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search products..."
+            className="border rounded-lg px-3 py-2 w-full"
+          />
+          <button
+            onClick={() => fetchProducts(search)}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+          >
+            Search
+          </button>
+        </div>
+
         <div className="grid grid-cols-2 gap-4">
           {products.map((p) => (
             <div
@@ -88,7 +119,7 @@ export default function Checkout() {
           ))}
           {products.length === 0 && (
             <p className="col-span-2 text-gray-500 italic">
-              No products available
+              No products found
             </p>
           )}
         </div>

@@ -58,6 +58,12 @@ function deleteProduct(id) {
   return { success: true };
 }
 
+function searchProducts(keyword) {
+  return db
+    .prepare("SELECT * FROM products WHERE name LIKE ? ORDER BY name ASC")
+    .all(`%${keyword}%`);
+}
+
 // --- SALES FUNCTIONS ---
 function addSale({ items, total }) {
   const insertSale = db.prepare("INSERT INTO sales (total) VALUES (?)");
@@ -104,4 +110,5 @@ export default {
   deleteProduct,
   addSale,
   getSales,
+  searchProducts
 };

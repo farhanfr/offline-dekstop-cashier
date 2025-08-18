@@ -2,10 +2,16 @@ import { useEffect, useState } from "react";
 
 export default function ProductManagement() {
   const [products, setProducts] = useState([]);
+  const [search, setSearch] = useState("");
   const [form, setForm] = useState({ name: "", price: "", stock: "" });
 
-  const fetchProducts = async () => {
-    const data = await window.api.getProducts();
+  const fetchProducts = async (keyword = "") => {
+    let data;
+    if (keyword.trim()) {
+      data = await window.api.searchProducts(keyword); // call DB search
+    } else {
+      data = await window.api.getProducts(); // load all if no search
+    }
     setProducts(data);
   };
 
@@ -32,6 +38,23 @@ export default function ProductManagement() {
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Product Management</h1>
+
+      {/* Search Box */}
+        <div className="mb-4 flex gap-2">
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search products..."
+            className="border rounded-lg px-3 py-2 w-full"
+          />
+          <button
+            onClick={() => fetchProducts(search)}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+          >
+            Search
+          </button>
+        </div>
 
       {/* Add Form */}
       <div className="flex space-x-2">
