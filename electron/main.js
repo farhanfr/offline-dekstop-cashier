@@ -35,3 +35,4 @@ ipcMain.handle("db:delete-product", (e, id) => db.deleteProduct(id));
 
 // Sales
 ipcMain.handle("db:add-sale", (event, sale) => db.addSale(sale));
+ipcMain.handle("db:get-sales", () => db.getSales());

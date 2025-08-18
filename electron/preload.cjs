@@ -7,4 +7,8 @@ contextBridge.exposeInMainWorld("api", {
   updateProduct: (product) => ipcRenderer.invoke("db:update-product", product),
   deleteProduct: (id) => ipcRenderer.invoke("db:delete-product", id),
   addSale: (sale) => ipcRenderer.invoke("db:add-sale", sale),
+
+  // ✅ history
+  getSales: () => ipcRenderer.invoke("db:get-sales"),
+
 });
