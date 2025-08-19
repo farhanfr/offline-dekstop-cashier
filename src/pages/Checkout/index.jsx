@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 export default function Checkout() {
+
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
   const [search, setSearch] = useState("");
@@ -25,16 +26,16 @@ export default function Checkout() {
     const existing = cart.find((c) => c.id === product.id);
     if (existing) {
       setCart(
-        cart.map((c) =>{
+        cart.map((c) => {
           console.log(c)
           if (c.stock === 0 || c.stock < 0) {
             return alert("Product out of stock");
           }
-          return  c.id === product.id ? { ...c, qty: c.qty + 1 } : c
+          return c.id === product.id ? { ...c, qty: c.qty + 1 } : c
         })
       );
     } else {
-      if(product.stock === 0 || product.stock < 0) {
+      if (product.stock === 0 || product.stock < 0) {
         return alert("Product out of stock");
       }
       setCart([...cart, { ...product, qty: 1 }]);
@@ -164,10 +165,10 @@ export default function Checkout() {
                     </td>
                     <td className="px-2 py-1 text-right">
                       <button
-                        onClick={() => removeFromCart(item.id)}
-                        className="text-red-600 hover:underline"
+                        onClick={() => handleDelete(p.id)}
+                        className="bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-700"
                       >
-                        Remove
+                        Delete
                       </button>
                     </td>
                   </tr>
@@ -185,11 +186,10 @@ export default function Checkout() {
           <button
             onClick={handleCheckout}
             disabled={cart.length === 0}
-            className={`px-4 py-2 rounded-lg ${
-              cart.length === 0
+            className={`px-4 py-2 rounded-lg ${cart.length === 0
                 ? "bg-gray-400 cursor-not-allowed"
                 : "bg-blue-600 hover:bg-blue-700 text-white"
-            }`}
+              }`}
           >
             Checkout
           </button>

@@ -39,6 +39,10 @@ function getProducts() {
   return db.prepare("SELECT * FROM products ORDER BY id DESC").all();
 }
 
+function getProductsById(id) {
+  return db.prepare("SELECT * FROM products WHERE id = ?").get(id);
+}
+
 function addProduct(product) {
   const stmt = db.prepare(
     "INSERT INTO products (name, price, stock) VALUES (?, ?, ?)"
@@ -110,5 +114,6 @@ export default {
   deleteProduct,
   addSale,
   getSales,
-  searchProducts
+  searchProducts,
+  getProductsById
 };
